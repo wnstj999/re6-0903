@@ -11,6 +11,26 @@ function App() {
     alert(markdown);
   };
 
+  // 툴바 커스텀 설정
+  const toolbarItems = [
+    // 기본 툴바
+    ["bold", "italic", "strike"],
+    ["ul", "ol", "task"],
+    ["table", "link"],
+    ["code", "codeblock"],
+    // 마지막에 커스텀 버튼
+    [
+      {
+        name: "save",
+        tooltip: "저장하기",
+        className: "toastui-editor-toolbar-icons save",
+        text: "💾 저장",
+        // command: "saveCommand", 
+         onClick: handleSave,
+      },
+    ],
+  ];
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-10">
       <div className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-4xl">
@@ -22,13 +42,19 @@ function App() {
           height="400px"
           initialEditType="markdown"
           useCommandShortcut={true}
+          toolbarItems={toolbarItems}
+          hooks={{
+            addImageBlobHook: async () => {}, // 이미지 훅 예시 (필요없으면 삭제)
+          }}
+          // 커스텀 버튼 이벤트 등록
+          events={{
+            command: (editor, commandName) => {
+              if (commandName === "saveCommand") {
+                handleSave();
+              }
+            },
+          }}
         />
-        <button
-          onClick={handleSave}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          저장
-        </button>
       </div>
     </div>
   );
